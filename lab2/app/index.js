@@ -2,10 +2,16 @@ const express = require("express");
 const usersRouter = require("./routes/users");
 const postsRouter = require("./routes/posts");
 
+const logs = require('./middleware/logs')
+
 const app = express();
 
 //--------------------------------------------
 
+
+
+app.use(logs.log);
+app.use(logs.logRequestBody);
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
 
