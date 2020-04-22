@@ -2,6 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
+router.use((request, response, next) => {
+  console.log("users routes");
+});
 
 router.get("/", (request, response) => {
   response.send("listing all users");
@@ -23,5 +26,4 @@ router.delete("/:id", (request, response) => {
   response.send(`deleting user of id ${request.params.id}`);
 });
 
-
-module.exports = router
+module.exports = router;

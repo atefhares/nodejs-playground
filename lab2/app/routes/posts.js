@@ -2,6 +2,10 @@ const express = require("express");
 
 const router = express.Router();
 
+router.use((request, response, next) => {
+  console.log("posts routes");
+});
+
 router.get("/", (request, response) => {
   response.send("listing all posts");
 });
