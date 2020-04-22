@@ -1,17 +1,8 @@
-
-function logRequestBody(request, response, next) {
-  console.log(request.body);
-  next();
-}
-
-
 function log(request, response, next) {
-  console.log(new Date(), request.method, request.url);
+  console.log(new Date(), request.method, request.url, "| body => ", request.body);
   next();
 }
 
-
-module.exports  = {
-  log, 
-  logRequestBody
+module.exports = {
+  log
 };
