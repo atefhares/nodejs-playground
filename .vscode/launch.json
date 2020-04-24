@@ -14,9 +14,22 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "nodemon",
+      "name": "nodemon/lab2",
       "runtimeExecutable": "nodemon",
       "program": "${workspaceFolder}/lab2/app/index.js",
+      "restart": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "nodemon/lab3",
+      "runtimeExecutable": "nodemon",
+      "program": "${workspaceFolder}/lab3/app/index.js",
       "restart": true,
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
