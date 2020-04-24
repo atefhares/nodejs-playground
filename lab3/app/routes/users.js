@@ -1,5 +1,6 @@
 const express = require("express");
 const userModel = require("../models/users");
+const postModel = require("../models/posts");
 
 const router = express.Router();
 
@@ -34,6 +35,22 @@ router.get("/:id", async (request, response) => {
   }
 });
 
+router.get("/:id/posts", async (request, response) => {
+  try {
+    const user = await userModel
+      .findById(request.params.id)
+      .select(["-password"]);
+    if (user) {
+      const user_posts = await postModel.find({ author: user._id });
+      response.json(user_posts);
+    } else {
+      response.send("Invalid user");
+    }
+  } catch (error) {
+    console.log(error);
+    response.send("could not get user's posts --> error");
+  }
+});
 // ==========================================================================
 
 router.post("/", async (request, response) => {
@@ -98,14 +115,8 @@ router.patch("/:id", async (request, response) => {
       if (g) user.gender = g;
       if (n) user.phone_number = n;
 
-      user.save((error, user) => {
-        if (!error) {
-          response.json(user);
-        } else {
-          console.log(error);
-          response.send("could not update user --> error");
-        }
-      });
+      const updated_user = await user.save();
+      response.json(updated_user);
     } else {
       response.send(`no user found with id: ${request.params.id}`);
     }

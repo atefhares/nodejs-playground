@@ -12,35 +12,33 @@ router.use((request, response, next) => {
 
 // ==========================================================================
 
-router.get("/", (request, response) => {
-  postsModel
-    .find({})
-    .populate({ path: "author", select: "-password" })
-    .exec((error, posts) => {
-      if (!error) response.json(posts);
-      else {
-        console.log(error);
-        response.send("could not update post --> error");
-      }
-    });
+router.get("/", async (request, response) => {
+  try {
+    const posts = await postsModel
+      .find({})
+      .populate({ path: "author", select: "-password" });
+    response.json(posts);
+  } catch (error) {
+    console.log(error);
+    response.send("could not update post --> error");
+  }
 });
 
-router.get("/:id", (request, response) => {
-  postsModel
-    .findById(request.params.id)
-    .populate({ path: "author", select: "-password" })
-    .exec((error, posts) => {
-      if (!error) response.json(posts);
-      else {
-        console.log(error);
-        response.send("could not get post --> error");
-      }
-    });
+router.get("/:id", async (request, response) => {
+  try {
+    const post = await postsModel
+      .findById(request.params.id)
+      .populate({ path: "author", select: "-password" });
+    response.json(post);
+  } catch (error) {
+    console.log(error);
+    response.send("could not get post --> error");
+  }
 });
 
 // ==========================================================================
 
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
   const { a, d, c } = request.body;
 
   const new_post = new postsModel({
@@ -49,13 +47,13 @@ router.post("/", (request, response) => {
     date: d,
   });
 
-  new_post.save((error, post) => {
-    if (!error) response.json(post);
-    else {
-      console.log(error);
-      response.send("could not save post --> error");
-    }
-  });
+  try {
+    const saved_post = await new_post.save();
+    response.json(saved_post);
+  } catch (error) {
+    console.log(error);
+    response.send("could not save post --> error");
+  }
 });
 
 // ==========================================================================
@@ -85,43 +83,36 @@ router.post("/", (request, response) => {
 //   );
 // });
 
-router.patch("/:id", (request, response) => {
+router.patch("/:id", async (request, response) => {
   const { c, d } = request.body;
 
-  postsModel.findById(request.params.id, (error, post) => {
-    if (!error) {
-      if (post) {
-        if (c) post.content = c;
-        if (d) post.date = d;
+  try {
+    const post = await postsModel.findById(request.params.id);
+    if (post) {
+      if (c) post.content = c;
+      if (d) post.date = d;
 
-        post.save((error, post) => {
-          if (!error) {
-            response.json(post);
-          } else {
-            console.log(error);
-            response.send("could not update post --> error");
-          }
-        });
-      } else {
-        response.send(`no post found with id: ${request.params.id}`);
-      }
+      const saved_post = await post.save();
+      response.json(saved_post);
     } else {
-      console.log(error);
-      response.send("could not update post --> error");
+      response.send(`no post found with id: ${request.params.id}`);
     }
-  });
+  } catch (error) {
+    console.log(error);
+    response.send("could not update post --> error");
+  }
 });
 
 // ==========================================================================
 
-router.delete("/:id", (request, response) => {
-  postsModel.findByIdAndDelete(request.params.id, (error, post) => {
-    if (!error) response.json(post);
-    else {
-      console.log(error);
-      response.send("could not update post --> error");
-    }
-  });
+router.delete("/:id", async (request, response) => {
+  try {
+    const deleted_post = await postsModel.findByIdAndDelete(request.params.id);
+    response.json(deleted_post);
+  } catch (error) {
+    console.log(error);
+    response.send("could not delete post --> error");
+  }
 });
 // ==========================================================================
 
