@@ -1,6 +1,8 @@
 const express = require("express");
 const userModel = require("../models/users");
 const postModel = require("../models/posts");
+const bcrypt = require("bcrypt");
+const jwt = require("../middleware/jwt");
 
 const router = express.Router();
 
@@ -75,32 +77,8 @@ router.post("/", async (request, response) => {
   }
 });
 
+
 // ==========================================================================
-
-// router.patch("/:id", (request, response) => {
-//   const { f, l, e, d, g, p, n } = request.body;
-
-//   userModel.findByIdAndUpdate(
-//     request.params.id,
-//     {
-//       first_name: f,
-//       last_name: l,
-//       password: p,
-//       date_of_birth: d,
-//       gender: g,
-//       email: e,
-//       phone_number: n,
-//     },
-//     { new: true },
-//     (error, user) => {
-//       if (!error) response.json(user);
-//       else {
-//         console.log(error);
-//         response.send("could not update user --> error");
-//       }
-//     }
-//   );
-// });
 
 router.patch("/:id", async (request, response) => {
   const { f, l, e, d, g, n } = request.body;

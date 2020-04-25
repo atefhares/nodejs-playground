@@ -51,15 +51,18 @@ const schema = new mongoose.Schema({
   phone_number: phoneValidation,
 });
 
-schema.pre("save", function (next) {
+schema.pre("save", async function (next) {
   if (this.isNew) {
     console.log("Doc is NEW");
 
-    bcrypt.hash(this.password, 10, (error, hashedVal) => {
-      if (!error) this.password = hashedVal;
-      else console.log(error);
-      next();
-    });
+    try {
+      hashed = await bcrypt.hash(this.password, 10);
+      this.password = hashed;
+    } catch (error) {
+      console.log(error);
+    }
+
+    next();
   } else {
     console.log("Doc is NOT NEW");
     next();
